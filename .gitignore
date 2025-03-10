@@ -1,0 +1,180 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Python virtual environments
+env/
+venv/
+ENV/
+.env
+.venv
+pythonenv*
+virtualenv/
+
+# Distribution / packaging
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Data files
+*.csv
+*.dat
+*.db
+*.sqlite
+*.sqlite3
+*.parquet
+*.avro
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npy
+*.npz
+# Uncomment if you want to ignore Excel files
+# *.xls
+# *.xlsx
+# Uncomment if you want to ignore json files
+# *.json
+
+# Exclude data files in data/ directory
+# But allow specific example files to be included 
+!data/example_data.csv
+
+# Logs
+logs/
+*.log
+log/
+
+# Credentials and secrets
+*.pem
+*.key
+*credentials*
+*credential*
+*secret*
+*.env
+config.ini
+*password*
+*api_key*
+*apikey*
+*token*
+.aws/
+.gcp/
+.azure/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+.terragrunt-cache/
+
+# Airflow
+airflow.db
+airflow.cfg
+unittests.cfg
+webserver_config.py
+airflow-webserver.pid
+airflow-worker.pid
+airflow-scheduler.pid
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Kafka
+kafka-logs/
+zookeeper-data/
+
+# dbt
+target/
+dbt_modules/
+dbt_packages/
+logs/
+
+# R
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Scala and SBT
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.scala_dependencies
+.worksheet
+
+# Other big data tools
+*.checkpoint
+*.jar
+
