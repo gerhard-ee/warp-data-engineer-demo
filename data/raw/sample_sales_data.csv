@@ -1,0 +1,12 @@
+transaction_id,date,product,region,quantity,price,customer_id
+TRX00001,2023-10-15,Laptop,North America,2,1299.99,CUST7842
+TRX00002,2023-10-16,Monitor,Europe,3,349.50,CUST5291
+TRX00003,2023-10-16,Keyboard,Asia Pacific,5,89.99,CUST6103
+TRX00004,2023-10-17,Mouse,North America,10,45.50,CUST2945
+TRX00005,2023-10-18,Laptop,Europe,1,1499.99,CUST1072
+TRX00006,2023-10-19,Headphones,Latin America,4,175.00,CUST3568
+TRX00007,2023-10-20,Tablet,North America,2,699.99,CUST4287
+TRX00008,2023-10-21,Smartphone,Asia Pacific,3,899.99,CUST9023
+TRX00009,2023-10-22,Docking Station,Europe,2,249.50,CUST6710
+TRX00010,2023-10-23,External SSD,North America,5,129.99,CUST3452
+

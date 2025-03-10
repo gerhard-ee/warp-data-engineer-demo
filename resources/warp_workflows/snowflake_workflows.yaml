@@ -1,0 +1,176 @@
+# Warp Workflows for Data Engineering with Snowflake and Airflow
+# This file contains common commands for data engineering tasks
+# To use: Place in ~/.warp/workflows/ directory
+
+---
+# SNOWFLAKE DATA LOADING WORKFLOWS
+- name: snowflake-login
+  command: snowsql -a <account> -u <username> -d <database> -r <role>
+  tags:
+    - snowflake
+    - connection
+  description: Connect to Snowflake using SnowSQL CLI
+
+- name: snowflake-load-csv
+  command: snowsql -a <account> -u <username> -d <database> -q "PUT file://$HOME/data/{{filename}}.csv @~/%stage_name% AUTO_COMPRESS=TRUE;"
+  tags:
+    - snowflake
+    - data-loading
+  description: Upload a local CSV file to a Snowflake stage
+
+- name: snowflake-copy-into
+  command: snowsql -a <account> -u <username> -d <database> -q "COPY INTO {{target_table}} FROM @~/%stage_name%/{{filename}}.csv.gz FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '\"' SKIP_HEADER = 1);"
+  tags:
+    - snowflake
+    - data-loading
+  description: Load staged CSV file into a Snowflake table
+
+- name: snowflake-unload-data
+  command: snowsql -a <account> -u <username> -d <database> -q "COPY INTO @~/%stage_name%/{{output_filename}} FROM (SELECT * FROM {{source_table}} WHERE {{condition}}) FILE_FORMAT = (TYPE = 'CSV' COMPRESSION = 'GZIP');"
+  tags:
+    - snowflake
+    - data-export
+  description: Export query results to a staged CSV file
+
+- name: snowflake-get-file
+  command: snowsql -a <account> -u <username> -d <database> -q "GET @~/%stage_name%/{{filename}} file://$HOME/data/downloads/ PARALLEL = 4;"
+  tags:
+    - snowflake
+    - data-export
+  description: Download file from Snowflake stage to local
+
+- name: snowflake-query
+  command: snowsql -a <account> -u <username> -d <database> -q "{{query}}"
+  tags:
+    - snowflake
+    - query
+  description: Run a custom query in Snowflake
+
+# SNOWFLAKE TABLE MANAGEMENT WORKFLOWS
+- name: snowflake-create-table
+  command: snowsql -a <account> -u <username> -d <database> -q "CREATE TABLE {{schema}}.{{table}} ({{column_definitions}});"
+  tags:
+    - snowflake
+    - ddl
+  description: Create a new table in Snowflake
+
+- name: snowflake-describe-table
+  command: snowsql -a <account> -u <username> -d <database> -q "DESC TABLE {{schema}}.{{table}};"
+  tags:
+    - snowflake
+    - metadata
+  description: Describe a Snowflake table schema
+
+- name: snowflake-show-tables
+  command: snowsql -a <account> -u <username> -d <database> -q "SHOW TABLES IN {{schema}};"
+  tags:
+    - snowflake
+    - metadata
+  description: List all tables in a schema
+
+- name: snowflake-analyze-perf
+  command: snowsql -a <account> -u <username> -d <database> -q "SELECT * FROM TABLE(INFORMATION_SCHEMA.QUERY_HISTORY()) WHERE QUERY_TEXT ILIKE '%{{search_term}}%' ORDER BY START_TIME DESC LIMIT 10;"
+  tags:
+    - snowflake
+    - monitoring
+  description: View recent query history containing search term
+
+# AIRFLOW WORKFLOWS
+- name: airflow-start-local
+  command: export AIRFLOW_HOME=~/airflow && airflow standalone
+  tags:
+    - airflow
+    - setup
+  description: Start Airflow in standalone mode locally
+
+- name: airflow-initdb
+  command: export AIRFLOW_HOME=~/airflow && airflow db init
+  tags:
+    - airflow
+    - setup
+  description: Initialize the Airflow database
+
+- name: airflow-create-user
+  command: export AIRFLOW_HOME=~/airflow && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com
+  tags:
+    - airflow
+    - setup
+  description: Create an Airflow admin user
+
+- name: airflow-list-dags
+  command: export AIRFLOW_HOME=~/airflow && airflow dags list
+  tags:
+    - airflow
+    - monitoring
+  description: List all DAGs in Airflow
+
+- name: airflow-trigger-dag
+  command: export AIRFLOW_HOME=~/airflow && airflow dags trigger {{dag_id}} -e {{execution_date}}
+  tags:
+    - airflow
+    - operations
+  description: Trigger a specific DAG run with execution date
+
+- name: airflow-unpause-dag
+  command: export AIRFLOW_HOME=~/airflow && airflow dags unpause {{dag_id}}
+  tags:
+    - airflow
+    - operations
+  description: Unpause a DAG to enable scheduling
+
+- name: airflow-pause-dag
+  command: export AIRFLOW_HOME=~/airflow && airflow dags pause {{dag_id}}
+  tags:
+    - airflow
+    - operations
+  description: Pause a DAG to disable scheduling
+
+- name: airflow-task-state
+  command: export AIRFLOW_HOME=~/airflow && airflow tasks states-for-dag-run {{dag_id}} {{execution_date}}
+  tags:
+    - airflow
+    - monitoring
+  description: View task states for a specific DAG run
+
+- name: airflow-task-logs
+  command: export AIRFLOW_HOME=~/airflow && airflow tasks logs {{dag_id}} {{task_id}} {{execution_date}}
+  tags:
+    - airflow
+    - monitoring
+  description: View logs for a specific task instance
+
+# COMBINED WORKFLOWS (SNOWFLAKE + AIRFLOW)
+- name: etl-full-pipeline
+  command: |
+    # Step 1: Extract data from source
+    python $HOME/scripts/extract_data.py --source {{source}} --output $HOME/data/raw/{{filename}}.csv
+    
+    # Step 2: Upload to Snowflake stage
+    snowsql -a <account> -u <username> -d <database> -q "PUT file://$HOME/data/raw/{{filename}}.csv @~/%stage_name% AUTO_COMPRESS=TRUE;"
+    
+    # Step 3: Load into Snowflake table
+    snowsql -a <account> -u <username> -d <database> -q "COPY INTO {{target_table}} FROM @~/%stage_name%/{{filename}}.csv.gz FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '\"' SKIP_HEADER = 1);"
+    
+    # Step 4: Trigger Airflow DAG for transformations
+    export AIRFLOW_HOME=~/airflow && airflow dags trigger {{dag_id}} -c '{"table":"{{target_table}}","run_date":"{{run_date}}"}'
+  tags:
+    - etl
+    - snowflake
+    - airflow
+  description: Run a full ETL pipeline from extraction to transformation
+
+- name: snowflake-backup
+  command: |
+    # Export table data to stage
+    snowsql -a <account> -u <username> -d <database> -q "COPY INTO @~/%backup_stage%/{{table}}_$(date +%Y%m%d).csv FROM {{table}} FILE_FORMAT = (TYPE = 'CSV' COMPRESSION = 'GZIP');"
+    
+    # Download to local backup directory
+    snowsql -a <account> -u <username> -d <database> -q "GET @~/%backup_stage%/{{table}}_$(date +%Y%m%d).csv.gz file://$HOME/backups/ PARALLEL = 4;"
+    
+    # Log backup completion
+    echo "Backup of {{table}} completed at $(date)" >> $HOME/backups/backup.log
+  tags:
+    - snowflake
+    - backup
+  description: Backup a Snowflake table to local storage with timestamp
+

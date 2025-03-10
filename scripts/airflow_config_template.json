@@ -1,0 +1,106 @@
+{
+  "airflow_connection": {
+    "host": "localhost",
+    "port": 8080,
+    "web_server_url": "http://localhost:8080",
+    "api_endpoint": "http://localhost:8080/api/v1"
+  },
+  "authentication": {
+    "username": "YOUR_AIRFLOW_USERNAME",
+    "password": "YOUR_AIRFLOW_PASSWORD",
+    "use_ssl": false,
+    "verify_ssl": true
+  },
+  "database_connection": {
+    "sql_alchemy_conn": "postgresql+psycopg2://airflow:airflow@localhost:5432/airflow",
+    "sql_engine_encoding": "utf-8"
+  },
+  "executor_settings": {
+    "executor": "LocalExecutor",  /* Options: LocalExecutor, CeleryExecutor, KubernetesExecutor */
+    "parallelism": 32,
+    "dag_concurrency": 16,
+    "max_active_runs_per_dag": 16
+  },
+  "celery_executor_config": {
+    "broker_url": "redis://redis:6379/0",
+    "result_backend": "db+postgresql://airflow:airflow@postgres:5432/airflow",
+    "worker_concurrency": 8
+  },
+  "kubernetes_executor_config": {
+    "namespace": "airflow",
+    "in_cluster": true,
+    "config_file": "/path/to/kube/config",
+    "worker_container_repository": "apache/airflow",
+    "worker_container_tag": "2.5.1"
+  },
+  "dags_folder": "/opt/airflow/dags",
+  "plugins_folder": "/opt/airflow/plugins",
+  "logs_folder": "/opt/airflow/logs",
+  "default_timezone": "UTC",
+  "load_examples": false,
+  "security": {
+    "hide_sensitive_var_conn_fields": true,
+    "secure_mode": true
+  },
+  "webserver_config": {
+    "web_server_port": 8080,
+    "web_server_host": "0.0.0.0",
+    "secret_key": "CHANGE_ME_TO_A_STRONG_RANDOM_VALUE",
+    "workers": 4,
+    "worker_class": "sync",
+    "access_logfile": "-",
+    "error_logfile": "-"
+  },
+  "email": {
+    "email_backend": "airflow.utils.email.send_email_smtp",
+    "smtp_host": "smtp.example.com",
+    "smtp_port": 587,
+    "smtp_user": "airflow@example.com",
+    "smtp_password": "your_smtp_password",
+    "smtp_mail_from": "airflow@example.com",
+    "smtp_starttls": true,
+    "smtp_ssl": false
+  },
+  "connections": {
+    "snowflake_default": {
+      "conn_type": "snowflake",
+      "host": "your_account.snowflakecomputing.com",
+      "login": "your_username",
+      "password": "your_password",
+      "schema": "your_schema",
+      "extra": {
+        "database": "your_database",
+        "warehouse": "your_warehouse",
+        "role": "your_role",
+        "account": "your_account"
+      }
+    },
+    "aws_default": {
+      "conn_type": "aws",
+      "extra": {
+        "aws_access_key_id": "YOUR_AWS_ACCESS_KEY",
+        "aws_secret_access_key": "YOUR_AWS_SECRET_KEY",
+        "region_name": "us-west-2"
+      }
+    }
+  },
+  "pools": [
+    {
+      "name": "default_pool",
+      "slots": 128,
+      "description": "Default pool"
+    },
+    {
+      "name": "snowflake_pool",
+      "slots": 10,
+      "description": "Pool for Snowflake tasks"
+    }
+  ],
+  "variables": {
+    "data_path": "/path/to/data/directory",
+    "environment": "development",
+    "slack_api_token": "YOUR_SLACK_API_TOKEN",
+    "alert_email": "alerts@example.com"
+  }
+}
+

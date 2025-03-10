@@ -1,0 +1,32 @@
+{
+  "connection": {
+    "user": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "account": "YOUR_ACCOUNT_IDENTIFIER",
+    "warehouse": "YOUR_WAREHOUSE_NAME",
+    "database": "YOUR_DATABASE_NAME",
+    "schema": "YOUR_SCHEMA_NAME",
+    "role": "YOUR_ROLE_NAME",
+    "region": "YOUR_REGION_NAME"
+  },
+  "session": {
+    "timezone": "UTC",
+    "query_tag": "WARP_DEMO"
+  },
+  "connection_options": {
+    "login_timeout": 60,
+    "network_timeout": 60,
+    "autocommit": true,
+    "client_session_keep_alive": true,
+    "client_prefetch_threads": 4,
+    "client_result_prefetch_threads": 2
+  },
+  "advanced": {
+    "authenticator": "snowflake",
+    "retry_count": 3,
+    "retry_delay": 5,
+    "max_connections": 10,
+    "retry_on_connection_error": true
+  }
+}
+
