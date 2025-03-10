@@ -1,0 +1,382 @@
+# Warp AI Demo Workflows for Data Engineering
+# Version: 1.0
+
+---
+# DATA PROCESSING DEMONSTRATIONS
+- name: extract-csv-data
+  command: |
+    Generate a Python script that extracts data from a CSV file with the following columns:
+    - transaction_id: unique identifier for each transaction
+    - date: transaction date in YYYY-MM-DD format
+    - customer_id: unique identifier for each customer
+    - product_id: unique identifier for each product
+    - quantity: number of items purchased
+    - price: unit price of the product
+    - total: total cost of the transaction
+    
+    The script should handle common data issues like missing values, duplicate records,
+    and invalid data types. Include proper error handling and logging.
+  tags:
+    - data-processing
+    - extraction
+    - python
+    - csv
+  description: Create a robust CSV data extraction script with error handling
+
+- name: clean-transform-data
+  command: |
+    Write a Python function that cleans and transforms a DataFrame with the following steps:
+    1. Convert date strings to datetime objects
+    2. Handle missing values in numeric columns with appropriate methods
+    3. Remove duplicate records based on transaction_id
+    4. Create derived features like day_of_week, month, quarter from the date
+    5. Normalize product names and categorize them
+    6. Calculate additional metrics like profit (assuming a standard margin)
+    
+    The function should be well-documented and include type hints.
+  tags:
+    - data-processing
+    - transformation
+    - python
+    - pandas
+  description: Create a data cleaning and transformation function for sales data
+
+- name: data-validation-rules
+  command: |
+    Generate a Python script that implements data validation rules for a sales dataset:
+    1. Check that transaction_id is unique and not null
+    2. Verify date values are within expected range (not in future, not too old)
+    3. Validate that price and quantity are positive numbers
+    4. Ensure total equals price * quantity within a small tolerance
+    5. Verify referential integrity (customer_id and product_id exist in reference tables)
+    6. Check for outliers in price and quantity columns
+    
+    The script should generate a validation report and flag records that fail validation.
+  tags:
+    - data-processing
+    - validation
+    - quality
+    - python
+  description: Create comprehensive data validation rules for sales data
+
+# ETL PIPELINE DEMONSTRATIONS
+- name: complete-etl-pipeline
+  command: |
+    Create a modular Python ETL pipeline for sales data with these components:
+    1. A configuration module that loads settings from a JSON file
+    2. An extraction module that reads from multiple sources (CSV, API, database)
+    3. A transformation module with functions for cleaning and enriching data
+    4. A loading module that writes to both files (Parquet) and a database
+    5. An orchestration module that ties the steps together with proper logging
+    6. Error handling with appropriate retry and fallback mechanisms
+    
+    The code should follow best practices for maintainability and testing.
+  tags:
+    - etl
+    - pipeline
+    - python
+    - architecture
+  description: Create a complete modular ETL pipeline for sales data
+
+- name: incremental-loading
+  command: |
+    Write a Python function that implements incremental loading for a data warehouse:
+    1. Track the last processed timestamp in a control table
+    2. Query source system for records newer than the last processed timestamp
+    3. Transform incoming records according to target schema
+    4. Implement SCD (Slowly Changing Dimension) Type 2 for dimension tables
+    5. Update fact tables with new transactions
+    6. Handle late-arriving data appropriately
+    7. Update the control table with the new watermark value
+    
+    Include proper error handling and transaction management.
+  tags:
+    - etl
+    - incremental
+    - data-warehouse
+    - python
+  description: Implement incremental loading with SCD Type 2 support
+
+- name: scheduler-config
+  command: |
+    Create a configuration file for scheduling ETL jobs with dependencies:
+    1. Define jobs for extracting data from multiple sources
+    2. Set up transformation jobs that depend on extraction
+    3. Configure loading jobs that depend on transformation
+    4. Add data quality check jobs that run after loading
+    5. Define schedules for daily, weekly, and monthly batch processes
+    6. Set up notification rules for failures and successes
+    
+    The configuration should be in YAML format and include comments explaining each section.
+  tags:
+    - etl
+    - scheduling
+    - orchestration
+    - config
+  description: Create a YAML scheduler configuration for ETL pipeline orchestration
+
+# DOCUMENTATION GENERATION DEMONSTRATIONS
+- name: architecture-documentation
+  command: |
+    Generate a comprehensive markdown document describing the architecture of a data engineering platform:
+    1. Overview of the platform and its purpose
+    2. Component diagram showing data flow from sources to consumption
+    3. Description of each component (data lake, data warehouse, ETL processes, APIs)
+    4. Technology choices and justifications
+    5. Security and compliance considerations
+    6. Scaling approach and performance characteristics
+    7. Monitoring and alerting strategy
+    8. Disaster recovery and business continuity plans
+    
+    Include appropriate headings, bullet points, and formatting for readability.
+  tags:
+    - documentation
+    - architecture
+    - design
+  description: Generate architectural documentation for a data engineering platform
+
+- name: data-dictionary
+  command: |
+    Create a data dictionary template in markdown format for a retail analytics data warehouse:
+    1. Include sections for fact tables (sales, inventory, web_visits)
+    2. Include sections for dimension tables (products, customers, stores, dates)
+    3. For each table, document:
+       - Table name and description
+       - Column names, data types, and descriptions
+       - Primary and foreign keys
+       - Business rules and constraints
+       - Sample values
+       - Update frequency
+    
+    The format should be clean, well-structured, and easy to maintain.
+  tags:
+    - documentation
+    - data-dictionary
+    - metadata
+  description: Generate a comprehensive data dictionary template for analytics tables
+
+- name: process-documentation
+  command: |
+    Write detailed process documentation for an ETL data pipeline:
+    1. Purpose and scope of the pipeline
+    2. Frequency and timing of execution
+    3. Data sources and their characteristics
+    4. Transformation logic and business rules
+    5. Data quality checks and error handling procedures
+    6. Output destinations and formats
+    7. Dependencies and prerequisites
+    8. Monitoring and alerting setup
+    9. Troubleshooting steps for common issues
+    
+    Format the documentation with clear headings, bullet points, and code examples where appropriate.
+  tags:
+    - documentation
+    - process
+    - procedures
+  description: Generate comprehensive ETL process documentation with troubleshooting guide
+
+# TROUBLESHOOTING DEMONSTRATIONS
+- name: performance-optimization
+  command: |
+    I have a slow-running Python data processing script that takes hours to process a 5GB CSV file. Here's the current approach:
+    
+    ```python
+    import pandas as pd
+    
+    # Load the entire CSV into memory
+    df = pd.read_csv("large_file.csv")
+    
+    # Perform transformations
+    for index, row in df.iterrows():
+        # Complex calculations for each row
+        df.at[index, "calculated_field"] = some_complex_function(row)
+    
+    # Group data and calculate aggregates
+    result = df.groupby("category").agg({"value": "sum", "quantity": "mean"})
+    
+    # Write results
+    result.to_csv("output.csv")
+    ```
+    
+    How can I optimize this code for better performance? Provide a refactored version with explanations.
+  tags:
+    - troubleshooting
+    - performance
+    - optimization
+    - python
+  description: Optimize a slow-running data processing script for large CSV files
+
+- name: memory-error-fix
+  command: |
+    My Python script is crashing with a memory error when processing a large dataset:
+    
+    ```
+    MemoryError: Unable to allocate 2.5 GiB for array
+    ```
+    
+    Here's the relevant code:
+    
+    ```python
+    import pandas as pd
+    import numpy as np
+    
+    # Load multiple large files
+    df1 = pd.read_csv("sales_2020.csv")  # 1.5GB file
+    df2 = pd.read_csv("sales_2021.csv")  # 2GB file
+    df3 = pd.read_csv("sales_2022.csv")  # 2.5GB file
+    
+    # Combine into one dataframe
+    combined_df = pd.concat([df1, df2, df3])
+    
+    # Create pivot table
+    pivot = combined_df.pivot_table(
+        index="product_id", 
+        columns="date", 
+        values="sales_amount", 
+        aggfunc="sum"
+    )
+    
+    # Additional processing and export
+    ```
+    
+    How can I refactor this to handle large datasets without running out of memory?
+  tags:
+    - troubleshooting
+    - memory
+    - optimization
+    - python
+  description: Fix memory errors when processing large datasets in Python
+
+- name: debug-pipeline-failure
+  command: |
+    My ETL pipeline is failing with this error:
+    
+    ```
+    sqlalchemy.exc.IntegrityError: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "transactions_pkey"
+    DETAIL:  Key (transaction_id)=(T1098432) already exists.
+    ```
+    
+    This happens during the final stage when loading transformed data to PostgreSQL. The pipeline:
+    1. Extracts from multiple sources
+    2. Transforms and combines the data
+    3. Loads to a PostgreSQL database
+    
+    How should I troubleshoot and fix this issue? What changes should I make to prevent it?
+  tags:
+    - troubleshooting
+    - database
+    - integrity
+    - etl
+  description: Debug and fix ETL pipeline failure due to integrity constraints
+
+# VISUALIZATION DEMONSTRATIONS
+- name: sales-dashboard
+  command: |
+    Create a Python script using Plotly Dash to build an interactive sales dashboard with:
+    1. A time series chart showing daily/weekly/monthly sales trends
+    2. A bar chart of top-selling products
+    3. A map visualization showing sales by region
+    4. A pie chart of sales by category
+    5. KPI metrics (total sales, growth rate, average order value)
+    6. Interactive filters for date range, product category, and region
+    
+    The dashboard should load data from a CSV file and update visualizations based on user selections.
+  tags:
+    - visualization
+    - dashboard
+    - plotly
+    - python
+  description: Create an interactive sales dashboard with Plotly Dash
+
+- name: anomaly-detection-viz
+  command: |
+    Write a Python script that:
+    1. Loads time series sales data from a CSV file
+    2. Applies anomaly detection algorithms to identify unusual patterns
+    3. Creates visualizations highlighting the anomalies, including:
+       - Time series plot with anomalies marked
+       - Distribution plot showing normal vs. anomalous values
+       - Heatmap showing frequency of anomalies by day/hour
+       - Correlation matrix of features during anomalies
+    
+    The script should use matplotlib and seaborn for visualization and include appropriate annotations and styling.
+  tags:
+    - visualization
+    - anomaly-detection
+    - time-series
+    - python
+  description: Visualize anomalies in time series sales data with Python
+
+- name: data-quality-report
+  command: |
+    Create a Python script that generates a visual data quality report with:
+    1. Completeness metrics (% of non-null values per column)
+    2. Uniqueness analysis (distribution of unique values, duplicates)
+    3. Consistency checks (values matching expected patterns)
+    4. Statistical distribution visualizations for numeric columns
+    5. Outlier identification and visualization
+    6. Correlation heatmap between columns
+    
+    The report should be generated as an HTML file with interactive elements where appropriate.
+  tags:
+    - visualization
+    - data-quality
+    - reporting
+    - python
+  description: Generate a comprehensive visual data quality report with Python
+
+# INTEGRATION DEMONSTRATIONS
+- name: api-integration
+  command: |
+    Write a Python script that integrates with an external API for data ingestion:
+    1. Authenticate using OAuth 2.0
+    2. Make paginated requests to fetch transaction data
+    3. Handle rate limiting with exponential backoff
+    4. Transform the API response into a structured DataFrame
+    5. Validate the data against a schema
+    6. Save both raw responses (for audit) and processed data
+    
+    Include proper error handling, logging, and make the code configurable for different API endpoints.
+  tags:
+    - integration
+    - api
+    - ingestion
+    - python
+  description: Create a robust API integration script for data ingestion
+
+- name: database-sync
+  command: |
+    Create a Python script that synchronizes data between two databases:
+    1. Connect to source (PostgreSQL) and target (Snowflake) databases
+    2. Identify new and changed records since last sync using timestamps
+    3. Handle schema differences and data type conversions
+    4. Implement efficient batch processing for large tables
+    5. Maintain a log of sync operations for audit purposes
+    6. Provide summary statistics after completion
+    
+    The script should be configurable and handle errors gracefully.
+  tags:
+    - integration
+    - database
+    - synchronization
+    - python
+  description: Implement a database synchronization tool with change tracking
+
+- name: streaming-integration
+  command: |
+    Write a Python script that processes streaming data:
+    1. Connect to a Kafka topic and consume messages
+    2. Parse and validate incoming JSON messages
+    3. Enrich data with lookups from a reference database
+    4. Apply windowed aggregations (5-minute windows)
+    5. Write results to both a real-time dashboard and persistent storage
+    6. Implement checkpointing for recovery
+    
+    Include configuration options and explain the high-level architecture.
+  tags:
+    - integration
+    - streaming
+    - kafka
+    - python
+  description: Create a streaming data processing pipeline with Kafka
+
